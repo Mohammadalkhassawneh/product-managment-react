@@ -1,0 +1,11 @@
+.card-img-top {
+    height: 300px; /* Adjust the height to your desired value */
+    object-fit: cover;
+  }
+.details-list {
+    background-color: #f2f2f2; /* Adjust the color to your desired shade of grey */
+    padding: 10px;
+}
+ul {
+    text-align: left !important;
+}

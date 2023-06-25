@@ -1,32 +1,34 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 
-const Login = ({ onLogin }) => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
+const Login = ({ onLogin, navigate }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
+  const handleLogin = () => {
+    localStorage.setItem('isLoggedIn', true);
+    onLogin();
+    navigate('/products');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+  
     try {
       const response = await axios.post('http://localhost:3000/api/v1/login', {
         email,
         password
       });
-
-      // Handle successful login, e.g., update authentication status and store tokens
+  
       setSuccessMessage(response.data.message);
       setError('');
-      onLogin(); // Call the onLogin function to update the login state
-      navigate('/products');
+      handleLogin(response.data.name, navigate);
     } catch (error) {
       if (error.response && error.response.data && error.response.data.message) {
-        // Handle login error, e.g., display error message
         setError(error.response.data.message);
         setSuccessMessage('');
       }

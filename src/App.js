@@ -1,34 +1,71 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Link, Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, Link, Navigate, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import ProductList from './ProductList';
 import RegistrationForm from './RegistrationForm';
 import Login from './Login';
 import Logout from './Logout';
+import ProductCard from './ProductCard';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userName, setUserName] = useState('');
 
+  useEffect(() => {
+    const checkLoggedInStatus = () => {
+      const storedIsLoggedIn = localStorage.getItem('isLoggedIn');
+      const storedUserName = localStorage.getItem('userName');
+
+      if (storedIsLoggedIn && storedUserName) {
+        setIsLoggedIn(true);
+        setUserName(storedUserName);
+      }
+    };
+
+    checkLoggedInStatus();
+  }, []);
+
   const handleLogin = (name) => {
     setIsLoggedIn(true);
     setUserName(name);
-    // Perform any other necessary login logic
+    localStorage.setItem('isLoggedIn', true);
+    localStorage.setItem('userName', name);
+  
+    const navigate = useNavigate();
+    navigate('/products');
   };
 
   const handleLogout = () => {
     setIsLoggedIn(false);
     setUserName('');
-    // Perform any other necessary logout logic
+    localStorage.removeItem('isLoggedIn');
+    localStorage.removeItem('userName');
+
   };
 
   const ProtectedRoute = ({ element, path }) => {
-    if (isLoggedIn) {
-      return element;
-    } else {
-      return <Navigate to="/login" />;
+    const navigate = useNavigate();
+    const [isCheckingAuth, setIsCheckingAuth] = useState(true);
+
+    useEffect(() => {
+      const checkAuthentication = () => {
+        const isLoggedIn = localStorage.getItem('isLoggedIn');
+        setIsCheckingAuth(false);
+
+        if (!isLoggedIn) {
+          navigate('/login');
+        }
+      };
+
+      checkAuthentication();
+    }, [path, navigate]);
+
+    if (isCheckingAuth) {
+      return <div>Loading...</div>;
     }
+
+    return element;
   };
 
   return (
@@ -65,7 +102,6 @@ function App() {
                   </li>
                 )}
               </ul>
-
             </div>
           </div>
         </nav>

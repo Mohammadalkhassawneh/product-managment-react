@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate hook
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 const RegistrationForm = () => {
-  const navigate = useNavigate(); // Initialize useNavigate hook
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -21,11 +21,9 @@ const RegistrationForm = () => {
         password_confirmation: passwordConfirmation
       });
 
-      // Handle success, e.g., show a success message or redirect the user
-      setResponseMessage(response.data.message); // Update the response message in the state
-      navigate('/login'); // Redirect the user to the login page
+      setResponseMessage(response.data.message);
+      navigate('/login');
     } catch (error) {
-      // Handle error, e.g., display error messages
       if (error.response && error.response.data && error.response.data.errors) {
         setErrors(error.response.data.errors);
       }
