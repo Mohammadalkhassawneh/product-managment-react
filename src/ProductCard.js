@@ -48,7 +48,8 @@ const ProductCard = ({ product }) => {
               </li>
               <li>
                 <strong>Fixed Recipient Denominations:</strong>{' '}
-                {Object.values(product.fixed_recipient_denominations).join(', ')}
+                {product.fixed_recipient_denominations &&
+                  Object.values(product.fixed_recipient_denominations).join(', ')}
               </li>
               <li>
                 <strong>Fixed Sender Denominations:</strong>{' '}
