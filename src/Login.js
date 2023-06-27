@@ -18,19 +18,20 @@ const Login = ({ onLogin, navigate }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
   
+    const response = await axios.post('http://localhost:3000/api/v1/login', {
+      email,
+      password
+    });
+
     try {
-      const response = await axios.post('http://localhost:3000/api/v1/login', {
-        email,
-        password
-      });
-  
       setSuccessMessage(response.data.message);
       setError('');
       handleLogin(response.data.name, navigate);
     } catch (error) {
-      if (error.response && error.response.data && error.response.data.message) {
-        setError(error.response.data.message);
+      if (response.data.error) {
+        setError(response.data.error);
         setSuccessMessage('');
+        console.log(response.data.message);
       }
     }
   };
